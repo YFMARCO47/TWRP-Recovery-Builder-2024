@@ -132,8 +132,8 @@ jobs:
     - name: Clone Device Tree
       run: |
         cd workspace
-        git clone ${{ github.event.inputs.DEVICE_TREE }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
-        cd ${{ github.event.inputs.DEVICE_PATH }}
+        git clone https://$(echo "${{ secrets.RECOVERY_USERNAME }}" | sed 's/@/%40/'):${{ secrets.RECOVERY_TOKEN }}@$(echo "${{ inputs.DEVICE_TREE }}" | sed 's~https://~~') -b ${{ inputs.DEVICE_TREE_BRANCH }} ./device_tree
+        cd device_tree
         echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
     - name: Check Build Makefile
