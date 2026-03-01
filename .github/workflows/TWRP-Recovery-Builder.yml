@@ -157,11 +157,16 @@ jobs:
 
     - name: Building Image 
       run: |
-        cd workspace
+        cd android-recovery
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        lunch twrp_${{ inputs.DEVICE_NAME }}-ap2a-eng && make clean && mka adbd ${{ inputs.BUILD_TARGET }}image
-        echo "Done building your ${{ github.event.inputs.BUILD_TARGET }}.img"
+        if [ ${{ inputs.MANIFEST_BRANCH }} == 'twrp-14.1' ]; then
+            lunch ${{ env.DEVICE_MAKEFILE }}-ap2a-eng && make clean && make ${{ inputs.BUILD_TARGET }}image -j$(nproc --all)
+            echo "Done building your ${{ inputs.BUILD_TARGET }}.img"
+        else
+            lunch ${{ env.DEVICE_MAKEFILE }}-eng && make clean && make ${{ inputs.BUILD_TARGET }}image -j$(nproc --all)
+            echo "Done building your ${{ inputs.BUILD_TARGET }}.img"
+        fi
       
     - name: Set Build Date # Output will be use in Release
       run: |
