@@ -157,10 +157,10 @@ jobs:
 
     - name: Building Image 
       run: |
-        cd android-recovery
+        cd workspace
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        if [ ${{ inputs.MANIFEST_BRANCH }} == 'twrp-14.1' ]; then
+        if: github.event.inputs.MANIFEST_BRANCH != 'twrp-14'
             lunch ${{ env.DEVICE_MAKEFILE }}-ap2a-eng && make clean && make ${{ inputs.BUILD_TARGET }}image -j$(nproc --all)
             echo "Done building your ${{ inputs.BUILD_TARGET }}.img"
         else
